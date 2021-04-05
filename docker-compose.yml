@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    container_name: user_ddd
+    tty: true
+    networks:
+      - user_ddd_bridge
+    ports:
+      - 9000:3000
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - db
+    
+  db:
+    image: mongo:latest
+    container_name: user_ddd_db
+    restart: always
+    networks:
+      - user_ddd_bridge
+    volumes:
+      - ./db-mongo:/data/db
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: user_ddd
+
+  admin:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    networks:
+      - user_ddd_bridge
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_SERVER: db
+      ME_CONFIG_OPTIONS_EDITORTHEME: dracula
+       
+networks:
+  user_ddd_bridge:
+    driver: bridge
