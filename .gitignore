@@ -3,6 +3,7 @@
 /node_modules
 /.devcontainer
 /db-mongo
+/documentation
 
 # Logs
 logs

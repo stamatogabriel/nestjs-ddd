@@ -13,6 +13,6 @@ Project to studies implementation Hexagonal Architecture and DDD (Domain Driven 
 Open terminal in project dist and run command: `docker-compose up -d`.
 
 ### Hosts
-Applicaton: `http://localhost:9000`
-Database: `http://localhost:27017`
-Admin Database: `http://localhost:8081`
+Applicaton: `http://localhost:9000`<br />
+Database: `http://localhost:27017`<br />
+Admin Database: `http://localhost:8081`<br />
