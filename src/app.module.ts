@@ -28,7 +28,7 @@ import { AppService } from './app.service';
           uri: database.get(),
           useNewUrlParser: true,
           useUnifiedTopology: true,
-          useFindAndModify: true,
+          useFindAndModify: false,
         };
       },
       inject: [DatabaseConnectionService],

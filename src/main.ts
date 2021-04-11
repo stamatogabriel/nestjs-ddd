@@ -11,8 +11,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
 
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('Users DDD example')
+    .setDescription('The users DDD API description')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);

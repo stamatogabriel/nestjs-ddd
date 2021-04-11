@@ -3,14 +3,17 @@ import { HmacSHA512 } from 'crypto-js';
 
 import { User } from '../../domain/user/user';
 
-export const UserSchema = new Schema({
-  _id: { type: Schema.Types.ObjectId, required: true, auto: true },
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-}, {
-  timestamps: true
-});
+export const UserSchema = new Schema(
+  {
+    _id: { type: Schema.Types.ObjectId, required: true, auto: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true, select: false },
+  },
+  {
+    timestamps: true,
+  },
+);
 
 UserSchema.pre<IUserEntity>('save', function (next) {
   if (this.password) {
@@ -22,6 +25,6 @@ UserSchema.pre<IUserEntity>('save', function (next) {
     this.password = hashPassword;
   }
   next();
-})
+});
 
 export interface IUserEntity extends Omit<User, '_id'>, Document { }
