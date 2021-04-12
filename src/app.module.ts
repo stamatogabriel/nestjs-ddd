@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { DatabaseModule } from './database/database.module';
-import { DatabaseConnectionService } from './database/connection.service'
+import { DatabaseConnectionService } from './database/connection.service';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 
 import { DomainModule } from './domain/domain.module';
@@ -41,4 +41,4 @@ import { AppService } from './app.service';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

@@ -12,14 +12,14 @@ export const UserSchema = new Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 UserSchema.pre<IUserEntity>('save', function (next) {
   if (this.password) {
     const hashPassword = HmacSHA512(
       this.password,
-      process.env.PASSWORD_SALT,
+      process.env.PASSWORD_SALT
     ).toString();
 
     this.password = hashPassword;
@@ -27,4 +27,4 @@ UserSchema.pre<IUserEntity>('save', function (next) {
   next();
 });
 
-export interface IUserEntity extends Omit<User, '_id'>, Document { }
+export interface IUserEntity extends Omit<User, '_id'>, Document {}

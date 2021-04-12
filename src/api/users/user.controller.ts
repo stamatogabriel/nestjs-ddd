@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { CreateUserDTO } from './dto/create.dto';
@@ -15,9 +23,9 @@ import { UpdateUserDto } from './dto/update.dto';
 @Controller('users')
 export class UserController {
   constructor(
-    private readonly createUser: Create, 
-    private readonly indexUser: Index, 
-    private readonly findByIdUser: FindById, 
+    private readonly createUser: Create,
+    private readonly indexUser: Index,
+    private readonly findByIdUser: FindById,
     private readonly updateUser: UpdateById,
     private readonly destroyUser: Destroy
   ) {}
@@ -29,12 +37,12 @@ export class UserController {
 
   @Get()
   public async index() {
-    return this.indexUser.index()
+    return this.indexUser.index();
   }
 
   @Get(':id')
   public async findById(@Param('id') param) {
-    return this.findByIdUser.findById(param)
+    return this.findByIdUser.findById(param);
   }
 
   @Put(':id')

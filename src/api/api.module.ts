@@ -6,6 +6,6 @@ import { UserController } from './users/user.controller';
 
 @Module({
   controllers: [UserController],
-  imports: [DomainModule]
+  imports: [DomainModule],
 })
 export class ApiModule {}

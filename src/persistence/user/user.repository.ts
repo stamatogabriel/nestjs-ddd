@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -8,7 +8,7 @@ import { IUserEntity } from './user.entity';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
-  constructor(@InjectModel('User') private readonly user: Model<IUserEntity>) { }
+  constructor(@InjectModel('User') private readonly user: Model<IUserEntity>) {}
 
   public async Create(data: User): Promise<User> {
     return await this.user.create(data);
@@ -23,12 +23,14 @@ export class UserRepository implements IUserRepository {
   }
 
   public async UpdateById(id: string, data: Partial<User>): Promise<User> {
-    return await (await this.user.findByIdAndUpdate(id, data, { new: true })).save();
+    return await (
+      await this.user.findByIdAndUpdate(id, data, { new: true })
+    ).save();
   }
 
   public async Destroy(id: string): Promise<unknown> {
     await this.user.findByIdAndDelete(id);
 
-    return { message: 'User successfully deleted.' }
+    return { message: 'User successfully deleted.' };
   }
 }

@@ -6,4 +6,4 @@ import { UserModule } from './user/user.module';
   imports: [UserModule],
   exports: [UserModule],
 })
-export class DomainModule {};
+export class DomainModule {}
