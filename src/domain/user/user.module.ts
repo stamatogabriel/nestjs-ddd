@@ -11,7 +11,23 @@ import { UserRepositoryModule } from '../../persistence/user/user_repository.mod
 
 @Module({
   imports: [UserRepositoryModule],
-  providers: [Index, Create, FindById, FindByEmail, FindByToken, UpdateById, Destroy],
-  exports: [Index, Create, FindById, FindByEmail, FindByToken, UpdateById, Destroy],
+  providers: [
+    Index,
+    Create,
+    FindById,
+    FindByEmail,
+    FindByToken,
+    UpdateById,
+    Destroy,
+  ],
+  exports: [
+    Index,
+    Create,
+    FindById,
+    FindByEmail,
+    FindByToken,
+    UpdateById,
+    Destroy,
+  ],
 })
 export class UserModule {}

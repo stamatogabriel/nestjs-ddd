@@ -6,6 +6,7 @@ import {
   Post,
   Put,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -18,6 +19,8 @@ import { UpdateById } from '../../domain/user/update_by_id';
 import { Destroy } from '../../domain/user/delete';
 
 import { UpdateUserDto } from './dto/update.dto';
+
+import { JwtAuthGuard } from '../../auth/guards/jwt.guard';
 
 @ApiTags('Users')
 @Controller('users')
@@ -35,6 +38,7 @@ export class UserController {
     return this.createUser.create(user);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   public async index() {
     return this.indexUser.index();

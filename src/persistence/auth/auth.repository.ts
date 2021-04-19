@@ -1,27 +1,30 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { MailerService } from '@nestjs-modules/mailer';
 import { HmacSHA512 } from 'crypto-js';
 import { v4 as uuidv4 } from 'uuid';
 
-import { FindByEmail } from '../domain/user/find_by_email';
-import { FindByToken } from '../domain/user/find_by_token';
-import { UpdateById } from '../domain/user/update_by_id';
+import { FindByEmail } from '../../domain/user/find_by_email';
+import { FindByToken } from '../../domain/user/find_by_token';
+import { UpdateById } from '../../domain/user/update_by_id';
 
-import { User } from '../domain/user/user';
+import { IAuthRepository } from '../../domain/auth/auth.repository';
+import { User } from '../../domain/user/user';
+import { Auth } from 'src/domain/auth/auth';
 
 @Injectable()
-export class AuthService {
+export class AuthRepository implements IAuthRepository {
   constructor(
     private readonly findUserByEmail: FindByEmail,
     private readonly findUserByToken: FindByToken,
-    private readonly updateUser: UpdateById,
-    private readonly jwtService: JwtService,
+    private readonly updateUserById: UpdateById,
     private readonly mailerService: MailerService,
-  ) { }
+    private readonly jwtService: JwtService
+  ) {}
 
-  async validateUser(email: string, password: string) {
-    const user = await this.findUserByEmail.findByEmail(email);
+  public async ValidateUser(email: string, password: string): Promise<User> {
+    const user: User = await this.findUserByEmail.findByEmail(email);
+
     if (!user) {
       throw new HttpException(
         { message: 'User not found' },
@@ -44,22 +47,24 @@ export class AuthService {
     return user;
   }
 
-  async login(user: User) {
+  public async Login(user: User): Promise<Auth> {
     user.password = undefined;
+    user.passwordResetExpires = undefined;
+    user.passwordResetToken = undefined;
 
     return {
       user,
-      accessToken: this.jwtService.sign(JSON.stringify(user)),
+      access_token: this.jwtService.sign(JSON.stringify(user)),
     };
   }
 
-  async forgotPass(email: string) {
+  public async ForgotPass(email: string): Promise<unknown> {
     const user = await this.findUserByEmail.findByEmail(email);
 
     if (!user) {
       throw new HttpException(
         { message: 'User not found' },
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NOT_FOUND
       );
     }
 
@@ -70,7 +75,7 @@ export class AuthService {
     const now = new Date();
     now.setHours(now.getHours() + 1);
 
-    await this.updateUser.updateById(user._id, {
+    await this.updateUserById.updateById(user._id, {
       passwordResetToken: hashData,
       passwordResetExpires: now,
     });
@@ -84,29 +89,30 @@ export class AuthService {
             <a href="https://questionnaireflow-frontend.vercel.app/resetsenha?token=${hashData}">Clique Aqui</a>
       `,
     });
+
+    return new HttpException('', HttpStatus.OK);
   }
 
-  async redefinePass(token: string, password: string) {
+  public async RedefinePass(token: string, password: string): Promise<unknown> {
     const user: any = await this.findUserByToken.findByToken(token);
 
     if (!user) {
-      throw new HttpException(
-        { message: 'Usuário not found' },
-        HttpStatus.NOT_FOUND,
-      );
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     if (new Date() > user.passwordResetExpires) {
       throw new HttpException(
-        { message: 'Token expirou. Por favor, repita o processo novamente.' },
-        HttpStatus.UNAUTHORIZED,
+        'Token expired. Please, try again.',
+        HttpStatus.UNAUTHORIZED
       );
     }
 
-    return this.updateUser.updateById(user._id, {
+    await this.updateUserById.updateById(user._id, {
       password: password,
       passwordResetExpires: null,
       passwordResetToken: null,
     });
+
+    return { message: 'password successfully reset' };
   }
 }

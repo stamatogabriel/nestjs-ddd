@@ -9,8 +9,8 @@ export const UserSchema = new Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
-    passwordResetToken: { type: String, default: null },
-    passwordResetExpires: { type: Date, default: null },
+    passwordResetToken: { type: String, default: null, select: false },
+    passwordResetExpires: { type: Date, default: null, select: false },
   },
   {
     timestamps: true,
