@@ -9,13 +9,15 @@ export const UserSchema = new Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
+    passwordResetToken: { type: String, default: null },
+    passwordResetExpires: { type: Date, default: null },
   },
   {
     timestamps: true,
   }
 );
 
-UserSchema.pre<IUserEntity>('save', function (next) {
+UserSchema.pre<IUserEntity>(['save'], function (next) {
   if (this.password) {
     const hashPassword = HmacSHA512(
       this.password,

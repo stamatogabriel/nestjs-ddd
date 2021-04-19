@@ -8,6 +8,8 @@ import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 
 import { DomainModule } from './domain/domain.module';
 import { PersistenceModule } from './persistence/persistance.module';
+import { AuthModule } from './auth/auth.module';
+
 import { UserModule } from './domain/user/user.module';
 
 import { ApiModule } from './api/api.module';
@@ -29,12 +31,14 @@ import { AppService } from './app.service';
           useNewUrlParser: true,
           useUnifiedTopology: true,
           useFindAndModify: false,
+          useCreateIndex: true,
         };
       },
       inject: [DatabaseConnectionService],
     }),
     DomainModule,
     PersistenceModule,
+    AuthModule,
     UserModule,
     ApiModule,
   ],
